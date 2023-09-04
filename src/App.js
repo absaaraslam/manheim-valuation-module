@@ -69,7 +69,7 @@ function App() {
 
   const tokenGen = async () => {
     //POST AccessToken
-    const res = await fetch("https://carbingo.logointellect.com/api/token", {
+    const res = await fetch("http://carbingo.logointellect.com/api/token", {
       method: "POST",
     })
       .then((response) => response.json())
@@ -84,7 +84,7 @@ function App() {
 
   const retrieveYears = async () => {
     //GET Years
-    const resp = await fetch("https://carbingo.logointellect.com/fetchYears");
+    const resp = await fetch("http://carbingo.logointellect.com/fetchYears");
     const data = await resp.json();
     const years = data.items.map((item) => item.year);
     setYears(years);
@@ -93,7 +93,7 @@ function App() {
 
   const retrieveMake = async () => {
     //send Year and GET make
-    const resp = await fetch("https://carbingo.logointellect.com/fetchMake", {
+    const resp = await fetch("http://carbingo.logointellect.com/fetchMake", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -110,7 +110,7 @@ function App() {
 
   const retrieveModel = async () => {
     //send data and GET Model
-    const resp = await fetch("https://carbingo.logointellect.com/fetchModel", {
+    const resp = await fetch("http://carbingo.logointellect.com/fetchModel", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -127,7 +127,7 @@ function App() {
   
 
   const getValuation = async () => {
-    const resp = await fetch("https://carbingo.logointellect.com/getValuation", {
+    const resp = await fetch("http://carbingo.logointellect.com/getValuation", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
