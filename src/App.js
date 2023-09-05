@@ -7,24 +7,32 @@ function App() {
   const [token, setToken] = useState("no accessToken");
 
   const [tokenFlag, setTokenFlag] = useState(false);
+  const [colorFlag, setColorFlag] = useState(false);
+  const [gradeFlag, setGradeFlag] = useState(false);
   const [yearFlag, setYearFlag] = useState(false);
   const [makeFlag, setMakeFlag] = useState(false);
   const [modelFlag, setModelFlag] = useState(false);
+  const [trimFlag, setTrimFlag] = useState(false);
   const [valuationFlag, setValuationFlag] = useState(false);
 
   //DB states
-  const [DByear, setYears] = useState([]);
+  const [DBGrades, setGrades] = useState([]);
+  const [DBColors, setColors] = useState([]);
+  const [DByears, setYears] = useState([]);
   const [DBMakes, setMakes] = useState([]);
   const [DBModels, setModels] = useState([]);
+  const [DBTrims, setTrims] = useState([]);
   const [DBvaluation, setValuation] = useState([]);
 
   //inputs
+  const [selectedGrade, setSelectedGrade] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedMake, setSelectedMake] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
-  const [selectedValuation, setSelectedValuation] = useState("");
+  const [selectedTrim, setSelectedTrim] = useState("");
 
-//Vis
+  //Vis
   const [valuationVis, setValuationVis] = useState(false);
 
   const tokenButtonHandler = () => {
@@ -42,9 +50,24 @@ function App() {
     console.log("make button");
   };
 
-  const ModelButtonHandler = () => {
+  const modelButtonHandler = () => {
     setModelFlag(true);
     console.log("model button");
+  };
+
+  const trimButtonHandler = () => {
+    setTrimFlag(true);
+    console.log("trim button");
+  };
+
+  const colorButtonHandler = () => {
+    setColorFlag(true);
+    console.log("color button");
+  };
+
+  const gradeButtonHandler = () => {
+    setGradeFlag(true);
+    console.log("grade button");
   };
 
   const valuationButtonHandler = () => {
@@ -67,9 +90,24 @@ function App() {
     setSelectedModel(event.target.value);
   };
 
+  const handleTrimChange = (event) => {
+    console.log("here is selected trim=>", event.target.value);
+    setSelectedTrim(event.target.value);
+  };
+
+  const handleColorChange = (event) => {
+    console.log("here is selected color=>", event.target.value);
+    setSelectedColor(event.target.value);
+  };
+
+  const handleGradeChange = (event) => {
+    console.log("here is selected grade=>", event.target.value);
+    setSelectedGrade(event.target.value);
+  };
+
   const tokenGen = async () => {
     //POST AccessToken
-    const res = await fetch("https://carbingo.logointellect.com/api/token", {
+    const res = await fetch("https://server-valuation.vercel.app/api/token", {
       method: "POST",
     })
       .then((response) => response.json())
@@ -82,9 +120,26 @@ function App() {
       });
   };
 
+  const retrieveColors = async () => {
+    //GET Colors
+    const resp = await fetch("https://server-valuation.vercel.app/fetchColors");
+    const data = await resp.json();
+    const colors = data.items.map((item) => item.value);
+    setColors(colors);
+    console.log("colors", data);
+  };
+
+  const retrieveGrades = async () => {
+    //GET Grades
+    const resp = await fetch("https://server-valuation.vercel.app/fetchGrades");
+    const data = await resp.json();
+    const grades = data.items.map((item) => item.value);
+    setGrades(grades);
+    console.log("colors", data);
+  };
   const retrieveYears = async () => {
     //GET Years
-    const resp = await fetch("https://carbingo.logointellect.com/fetchYears");
+    const resp = await fetch("https://server-valuation.vercel.app/fetchYears");
     const data = await resp.json();
     const years = data.items.map((item) => item.year);
     setYears(years);
@@ -93,7 +148,7 @@ function App() {
 
   const retrieveMake = async () => {
     //send Year and GET make
-    const resp = await fetch("https://carbingo.logointellect.com/fetchMake", {
+    const resp = await fetch("https://server-valuation.vercel.app/fetchMake", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -110,7 +165,7 @@ function App() {
 
   const retrieveModel = async () => {
     //send data and GET Model
-    const resp = await fetch("https://carbingo.logointellect.com/fetchModel", {
+    const resp = await fetch("https://server-valuation.vercel.app/fetchModel", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -124,21 +179,41 @@ function App() {
     }
     console.log("models", data);
   };
-  
 
-  const getValuation = async () => {
-    const resp = await fetch("https://carbingo.logointellect.com/getValuation", {
+  const retrieveTrim = async () => {
+    //send data and GET Trim
+    const resp = await fetch("https://server-valuation.vercel.app/fetchTrim", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ modelConfirm: selectedModel })
+      body: JSON.stringify({ modelConfirm: selectedModel }),
+    });
+    const data = await resp.json();
+    if (data.items) {
+      const trims = data.items.map((item) => item.trim);
+      setTrims(trims);
+    }
+    console.log("trims", data);
+  };
+
+  const getValuation = async () => {
+    const resp = await fetch("https://server-valuation.vercel.app/getValuation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        trimConfirm: selectedTrim,
+        colorConfirm: selectedColor,
+        gradeConfirm: selectedGrade,
+      }),
     });
     const data = await resp.json();
     if (data.items) {
       const valuation = data.items.map((item) => item.retail);
       setValuation(valuation);
-      console.log("valuation", valuation);
+      console.log("valuation", data);
     }
   };
 
@@ -153,7 +228,9 @@ function App() {
     //GET apidata useEffect
     if (token != "no accessToken") {
       retrieveYears();
-      console.log("get them years");
+      retrieveColors();
+      retrieveGrades();
+      console.log("getFunctions triggered");
     }
   }, [token]);
 
@@ -173,9 +250,13 @@ function App() {
 
   useEffect(() => {
     //valuation button unearthing
-    if (modelFlag) {
+    if (trimFlag) {
       setValuationVis(true);
     }
+  }, [trimFlag]);
+
+  useEffect(() => {
+    if (modelFlag) retrieveTrim();
   }, [modelFlag]);
 
   useEffect(() => {
@@ -196,7 +277,7 @@ function App() {
             <label>
               Pick a Year:
               <select onChange={handleYearChange} value={selectedYear}>
-                {DByear.map((year) => (
+                {DByears.map((year) => (
                   <option key={year} value={year}>
                     {year}
                   </option>
@@ -225,7 +306,42 @@ function App() {
                 ))}
               </select>
             </label>
-            <button onClick={ModelButtonHandler}>Select Model</button>
+            <button onClick={modelButtonHandler}>Select Model</button>
+            <div>
+            <label>
+              Pick a Trim:
+              <select onChange={handleTrimChange} value={selectedTrim}>
+                {DBTrims.map((trim) => (
+                  <option key={trim} value={trim}>
+                    {trim}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button onClick={trimButtonHandler}>Select Trim</button>
+            <label>
+              Pick a Color:
+              <select onChange={handleColorChange} value={selectedColor}>
+                {DBColors.map((color) => (
+                  <option key={color} value={color}>
+                    {color}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button onClick={colorButtonHandler}>Select Color</button>
+            <label>
+              Pick a Grade:
+              <select onChange={handleGradeChange} value={selectedGrade}>
+                {DBGrades.map((grade) => (
+                  <option key={grade} value={grade}>
+                    {grade}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button onClick={gradeButtonHandler}>Select Grade</button>
+            </div>
           </div>
           {valuationVis == true ? (
             <button onClick={valuationButtonHandler}>Do Valuation</button>
