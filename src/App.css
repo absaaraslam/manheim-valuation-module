@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  
 }
 
 .App-logo {
@@ -15,18 +15,54 @@
 
 .App-header {
   background-color: #1c1e23;
-  min-height: 100vh;
+  min-height: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size:30px;
   color: white;
 }
 
 .App-link {
   color: #61dafb;
 }
+
+
+.accToken{
+  margin-top:50px;
+  text-align:center;
+}
+
+.row1{
+  display:flex;
+  background-color:#303d5d ;
+  text-align: center;
+  
+}
+.form{
+  border: #1c1e23;
+  border-color: aqua;
+  text-align: center;
+}
+
+.selectValuation{
+text-align: center;
+margin: 50px 50px;
+
+}
+
+.vinForm{
+  text-align: center;
+  margin-top: 50px;
+ 
+}
+
+.result{
+  text-align:center;
+  margin-top: 50px;
+}
+
 
 @keyframes App-logo-spin {
   from {
