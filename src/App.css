@@ -6,11 +6,43 @@
   height: 40vmin;
   pointer-events: none;
 }
+.firsstrow.row {
+  border-bottom: 1px solid #0000002b;
+}
 
+.secondrow.row {
+  padding: 1%;
+}
+
+.firstcol.col-md-3 {border-right: 1px solid #0000002b;}
+
+h1.text-black {
+  font-weight: bold;
+}
+
+h4.heading {
+  color: #2d7fc2;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+p.heading-desc {
+  font-size: 13px;
+}
+
+h4.subhead {
+  color: #ff6600;
+  font-weight: 700;
+  text-transform: capitalize;
+  font-size: 20px;
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+button.btn.btn-primary {
+  background: #007fc9;
 }
 
 .App-header {
