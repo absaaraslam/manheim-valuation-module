@@ -537,7 +537,7 @@ function App() {
                               value={selectedYear}
                             >
                               {DByears.map((year) => (
-                                <option key={year} value={year}>
+                                <option key={year} value={year} >
                                   {year}
                                 </option>
                               ))}
@@ -554,7 +554,7 @@ function App() {
                               value={selectedMake}
                             >
                               {DBMakes.map((make) => (
-                                <option key={make} value={make}>
+                                <option key={make} value={make} selected={DBMakes.length===1}>
                                   {make}
                                 </option>
                               ))}
@@ -573,7 +573,7 @@ function App() {
                               value={selectedModel}
                             >
                               {DBModels.map((model) => (
-                                <option key={model} value={model}>
+                                <option key={model} value={model} selected={DBModels.length===1}>
                                   {model}
                                 </option>
                               ))}
@@ -590,7 +590,7 @@ function App() {
                               value={selectedTrim}
                             >
                               {DBTrims.map((trim) => (
-                                <option key={trim} value={trim}>
+                                <option key={trim} value={trim} selected={DBTrims.length===1}>
                                   {trim}
                                 </option>
                               ))}
@@ -696,7 +696,7 @@ function App() {
                               ) : null}
 
                               {DBSearchWholesale.map((valuation) => (
-                                <h4 className="subhead mt-3">
+                                <h4 className="subhead mt-3" key={valuation}>
                                   {valuation.above} - {valuation.below}
                                 </h4>
                               ))}
