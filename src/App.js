@@ -170,7 +170,9 @@ function App() {
 
   const retrieveRegions = async () => {
     //GET Regions
-    const resp = await fetch("https://server-valuation.vercel.app/fetchRegions");
+    const resp = await fetch(
+      "https://server-valuation.vercel.app/fetchRegions"
+    );
     const data = await resp.json();
     const regions = data.items.map((item) => item.id);
     setRegions(regions);
@@ -238,21 +240,26 @@ function App() {
   };
 
   const getSearchValuation = async () => {
-    const resp = await fetch("https://server-valuation.vercel.app/getSeachValuation", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        trimConfirm: selectedTrim,
-        colorConfirm: selectedColor,
-        gradeConfirm: selectedGrade,
-        regionConfirm: selectedRegion,
-        odometerConfirm: selectedOdometer,
-      }),
-    });
+    const resp = await fetch(
+      "https://server-valuation.vercel.app/getSeachValuation",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          trimConfirm: selectedTrim,
+          colorConfirm: selectedColor,
+          gradeConfirm: selectedGrade,
+          regionConfirm: selectedRegion,
+          odometerConfirm: selectedOdometer,
+        }),
+      }
+    );
     const data = await resp.json();
+    console.log("bahar", data.items);
     if (data.items) {
+      console.log("andar")
       const wholesale = data.items.map((item) => item.wholesale);
       // const retail = data.items.map((item) => item.retail);
       const desc = data.items.map((item) => item.description);
@@ -263,18 +270,21 @@ function App() {
   };
 
   const getVinValuation = async () => {
-    const resp = await fetch("https://server-valuation.vercel.app/getVinValuation", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        vinConfirm: selectedVin,
-        colorConfirm: selectedColor,
-        odometerConfirm: selectedOdometer,
-        gradeConfirm: selectedGrade,
-      }),
-    });
+    const resp = await fetch(
+      "https://server-valuation.vercel.app/getVinValuation",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          vinConfirm: selectedVin,
+          colorConfirm: selectedColor,
+          odometerConfirm: selectedOdometer,
+          gradeConfirm: selectedGrade,
+        }),
+      }
+    );
     const data = await resp.json();
 
     if (data.items) {
@@ -295,21 +305,38 @@ function App() {
     }
   };
 
+  const getOptionalFunction = async () => {
+    //all optional get Requests
+    console.log("getting optional gets");
+    retrieveColors();
+    retrieveGrades();
+    retrieveRegions();
+  };
+
   useEffect(() => {
     //accessToken useEffect
     tokenGen();
   }, []);
 
   useEffect(() => {
-    //GET apidata useEffect
+    //GET year useEffect
     if (token != "no accessToken") {
       retrieveYears();
-      retrieveColors();
-      retrieveGrades();
-      retrieveRegions();
-      console.log("getFunctions triggered");
+      console.log("getYear triggered");
     }
   }, [token]);
+
+  useEffect(() => {
+    //GET apidata useEffect
+    console.log("useEffect da trigger");
+
+    if (vinNext) {
+      getOptionalFunction();
+    }
+    if (selectedTrim !== "") {
+      getOptionalFunction();
+    }
+  }, [vinNext, selectedTrim]);
 
   useEffect(() => {
     if (selectedYear !== "") {
@@ -497,7 +524,7 @@ function App() {
                               </div>
                             </div>
                           </div>
-                          <div className="col-md-6">
+                          <div className="col-md-12">
                             {selectedVin === "" ? null : (
                               <button
                                 className="btn btn-primary"
@@ -507,18 +534,18 @@ function App() {
                               </button>
                             )}
 
-                            {DBVinWholesale.length > 0
-                              ? DBVinWholesale.map((valuation) => (
-                                  <h4 className="subhead mt-3">
-                                    ${valuation.below} - ${valuation.above}
-                                  </h4>
-                                ))
-                              : DBVinWholesale!==[] ? (
-                                  <h4 className="subhead mt-3">
-                                    {DBVinWholesale.above} -{" "}
-                                    {DBVinWholesale.below}
-                                  </h4>
-                                ):null}
+                            {DBVinWholesale.length > 0 ? (
+                              DBVinWholesale.map((valuation) => (
+                                <h1 className="subhead mt-3">
+                                  ${valuation.below} - ${valuation.above}
+                                </h1>
+                              ))
+                            ) : DBVinWholesale.length === 0 ? null : (
+                              <h1 className="subhead mt-3">
+                                ${DBVinWholesale.below} - $
+                                {DBVinWholesale.above}
+                              </h1>
+                            )}
                           </div>
                         </div>
                       ) : null}
@@ -537,7 +564,7 @@ function App() {
                               value={selectedYear}
                             >
                               {DByears.map((year) => (
-                                <option key={year} value={year} >
+                                <option key={year} value={year}>
                                   {year}
                                 </option>
                               ))}
@@ -554,7 +581,11 @@ function App() {
                               value={selectedMake}
                             >
                               {DBMakes.map((make) => (
-                                <option key={make} value={make} selected={DBMakes.length===1}>
+                                <option
+                                  key={make}
+                                  value={make}
+                                  selected={DBMakes.length === 1}
+                                >
                                   {make}
                                 </option>
                               ))}
@@ -573,7 +604,11 @@ function App() {
                               value={selectedModel}
                             >
                               {DBModels.map((model) => (
-                                <option key={model} value={model} selected={DBModels.length===1}>
+                                <option
+                                  key={model}
+                                  value={model}
+                                  selected={DBModels.length === 1}
+                                >
                                   {model}
                                 </option>
                               ))}
@@ -590,7 +625,11 @@ function App() {
                               value={selectedTrim}
                             >
                               {DBTrims.map((trim) => (
-                                <option key={trim} value={trim} selected={DBTrims.length===1}>
+                                <option
+                                  key={trim}
+                                  value={trim}
+                                  selected={DBTrims.length === 1}
+                                >
                                   {trim}
                                 </option>
                               ))}
@@ -696,9 +735,9 @@ function App() {
                               ) : null}
 
                               {DBSearchWholesale.map((valuation) => (
-                                <h4 className="subhead mt-3" key={valuation}>
+                                <h1 className="subhead mt-3" key={valuation}>
                                   ${valuation.below} - ${valuation.above}
-                                </h4>
+                                </h1>
                               ))}
                             </div>
                           </div>

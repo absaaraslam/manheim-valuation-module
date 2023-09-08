@@ -45,6 +45,11 @@ button.btn.btn-primary {
   background: #007fc9;
 }
 
+h1.subhead{
+  font-weight: bold;
+  color: #ff6600;
+}
+
 .App-header {
   background-color: #1c1e23;
   min-height: 10vh;
