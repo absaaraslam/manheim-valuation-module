@@ -510,7 +510,7 @@ function App() {
                             {DBVinWholesale.length > 0
                               ? DBVinWholesale.map((valuation) => (
                                   <h4 className="subhead mt-3">
-                                    {valuation.above} - {valuation.below}
+                                    ${valuation.below} - ${valuation.above}
                                   </h4>
                                 ))
                               : DBVinWholesale!==[] ? (
@@ -697,7 +697,7 @@ function App() {
 
                               {DBSearchWholesale.map((valuation) => (
                                 <h4 className="subhead mt-3" key={valuation}>
-                                  {valuation.above} - {valuation.below}
+                                  ${valuation.below} - ${valuation.above}
                                 </h4>
                               ))}
                             </div>
