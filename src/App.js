@@ -170,9 +170,7 @@ function App() {
 
   const retrieveRegions = async () => {
     //GET Regions
-    const resp = await fetch(
-      "https://server-valuation.vercel.app/fetchRegions"
-    );
+    const resp = await fetch("https://server-valuation.vercel.app/fetchRegions");
     const data = await resp.json();
     const regions = data.items.map((item) => item.id);
     setRegions(regions);
@@ -200,7 +198,15 @@ function App() {
     const data = await resp.json();
     if (data.items) {
       const make = data.items.map((item) => item.make);
-      setMakes(make);
+      console.log("the make inside", make);
+      if (make.length == 1) {
+        console.log("what is first",make[0])
+        setSelectedMake(make[0])
+        setMakes(make);
+      }
+      else{
+        setMakes(make);
+      }
     }
     console.log("make", data);
   };
@@ -217,7 +223,16 @@ function App() {
     const data = await resp.json();
     if (data.items) {
       const models = data.items.map((item) => item.model);
-      setModels(models);
+      console.log("the model inside", models);
+      if (models.length == 1) {
+        console.log("what is first",models[0])
+        setSelectedModel(models[0])
+        setModels(models);
+      }
+      else{
+        setModels(models);
+      }
+     
     }
     console.log("models", data);
   };
@@ -234,32 +249,37 @@ function App() {
     const data = await resp.json();
     if (data.items) {
       const trims = data.items.map((item) => item.trim);
-      setTrims(trims);
+      console.log("the trim inside", trims);
+      if (trims.length == 1) {
+        console.log("what is first",trims[0])
+        setSelectedTrim(trims[0])
+        setTrims(trims);
+      }
+      else{
+        setTrims(trims);
+      }
     }
     console.log("trims", data);
   };
 
   const getSearchValuation = async () => {
-    const resp = await fetch(
-      "https://server-valuation.vercel.app/getSeachValuation",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          trimConfirm: selectedTrim,
-          colorConfirm: selectedColor,
-          gradeConfirm: selectedGrade,
-          regionConfirm: selectedRegion,
-          odometerConfirm: selectedOdometer,
-        }),
-      }
-    );
+    const resp = await fetch("https://server-valuation.vercel.app/getSeachValuation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        trimConfirm: selectedTrim,
+        colorConfirm: selectedColor,
+        gradeConfirm: selectedGrade,
+        regionConfirm: selectedRegion,
+        odometerConfirm: selectedOdometer,
+      }),
+    });
     const data = await resp.json();
     console.log("bahar", data.items);
     if (data.items) {
-      console.log("andar")
+      console.log("andar");
       const wholesale = data.items.map((item) => item.wholesale);
       // const retail = data.items.map((item) => item.retail);
       const desc = data.items.map((item) => item.description);
@@ -270,21 +290,18 @@ function App() {
   };
 
   const getVinValuation = async () => {
-    const resp = await fetch(
-      "https://server-valuation.vercel.app/getVinValuation",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          vinConfirm: selectedVin,
-          colorConfirm: selectedColor,
-          odometerConfirm: selectedOdometer,
-          gradeConfirm: selectedGrade,
-        }),
-      }
-    );
+    const resp = await fetch("https://server-valuation.vercel.app/getVinValuation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        vinConfirm: selectedVin,
+        colorConfirm: selectedColor,
+        odometerConfirm: selectedOdometer,
+        gradeConfirm: selectedGrade,
+      }),
+    });
     const data = await resp.json();
 
     if (data.items) {
@@ -360,7 +377,10 @@ function App() {
   }, [selectedTrim]);
 
   useEffect(() => {
-    if (selectedModel) retrieveTrim();
+    if (selectedModel) {
+      console.log("selectedModel is:", selectedModel);
+      retrieveTrim();
+    }
   }, [selectedModel]);
 
   useEffect(() => {
@@ -530,7 +550,7 @@ function App() {
                                 className="btn btn-primary"
                                 onClick={vinValuationButtonHandler}
                               >
-                                Do Vin Valuation
+                                Get Valuation
                               </button>
                             )}
 
@@ -581,11 +601,7 @@ function App() {
                               value={selectedMake}
                             >
                               {DBMakes.map((make) => (
-                                <option
-                                  key={make}
-                                  value={make}
-                                  selected={DBMakes.length === 1}
-                                >
+                                <option key={make} value={make}>
                                   {make}
                                 </option>
                               ))}
@@ -604,11 +620,7 @@ function App() {
                               value={selectedModel}
                             >
                               {DBModels.map((model) => (
-                                <option
-                                  key={model}
-                                  value={model}
-                                  selected={DBModels.length === 1}
-                                >
+                                <option key={model} value={model}>
                                   {model}
                                 </option>
                               ))}
@@ -622,14 +634,10 @@ function App() {
                               className="form-control"
                               id="trim"
                               onChange={handleTrimChange}
-                              value={selectedTrim}
+                              value={"Trims"}
                             >
                               {DBTrims.map((trim) => (
-                                <option
-                                  key={trim}
-                                  value={trim}
-                                  selected={DBTrims.length === 1}
-                                >
+                                <option key={trim} value={trim}>
                                   {trim}
                                 </option>
                               ))}
@@ -730,7 +738,7 @@ function App() {
                                   className="btn btn-primary"
                                   onClick={valuationButtonHandler}
                                 >
-                                  Do Search Valuation
+                                  Get Valuation
                                 </button>
                               ) : null}
 
