@@ -135,15 +135,22 @@ function App() {
     setSelectedRegion(event.target.value);
   };
 
+  const capitalizeFirstLetter = (str) => {
+    //since we need
+    console.log("str is", str);
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
   const tokenGen = async () => {
     //POST AccessToken
-    const res = await fetch("https://server-valuation.vercel.app/api/token", {
+    const res = await fetch("http://localhost:3001/api/token", {
       method: "POST",
     })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        setToken(data.access_token);
+        // setToken(data.access_token);
+        setToken(capitalizeFirstLetter(data.access_token));
       })
       .catch((error) => {
         console.error("token error", error);
@@ -152,7 +159,13 @@ function App() {
 
   const retrieveColors = async () => {
     //GET Colors
-    const resp = await fetch("https://server-valuation.vercel.app/fetchColors");
+    const resp = await fetch("http://localhost:3001/fetchColors", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ yearConfirm: selectedYear, accessToken: token }),
+    });
     const data = await resp.json();
     const colors = data.items.map((item) => item.value);
     setColors(colors);
@@ -161,7 +174,13 @@ function App() {
 
   const retrieveGrades = async () => {
     //GET Grades
-    const resp = await fetch("https://server-valuation.vercel.app/fetchGrades");
+    const resp = await fetch("http://localhost:3001/fetchGrades", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ accessToken: token }),
+    });
     const data = await resp.json();
     const grades = data.items.map((item) => item.value);
     setGrades(grades);
@@ -170,7 +189,13 @@ function App() {
 
   const retrieveRegions = async () => {
     //GET Regions
-    const resp = await fetch("https://server-valuation.vercel.app/fetchRegions");
+    const resp = await fetch("http://localhost:3001/fetchRegions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ accessToken: token }),
+    });
     const data = await resp.json();
     const regions = data.items.map((item) => item.id);
     setRegions(regions);
@@ -179,7 +204,13 @@ function App() {
 
   const retrieveYears = async () => {
     //GET Years
-    const resp = await fetch("https://server-valuation.vercel.app/fetchYears");
+    const resp = await fetch("http://localhost:3001/fetchYears", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ accessToken: token }),
+    });
     const data = await resp.json();
     const years = data.items.map((item) => item.year);
     setYears(years);
@@ -188,23 +219,22 @@ function App() {
 
   const retrieveMake = async () => {
     //send Year and GET make
-    const resp = await fetch("https://server-valuation.vercel.app/fetchMake", {
+    const resp = await fetch("http://localhost:3001/fetchMake", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ yearConfirm: selectedYear }),
+      body: JSON.stringify({ yearConfirm: selectedYear, accessToken: token }),
     });
     const data = await resp.json();
     if (data.items) {
       const make = data.items.map((item) => item.make);
       console.log("the make inside", make);
       if (make.length == 1) {
-        console.log("what is first",make[0])
-        setSelectedMake(make[0])
+        console.log("what is first", make[0]);
+        setSelectedMake(make[0]);
         setMakes(make);
-      }
-      else{
+      } else {
         setMakes(make);
       }
     }
@@ -213,49 +243,46 @@ function App() {
 
   const retrieveModel = async () => {
     //send data and GET Model
-    const resp = await fetch("https://server-valuation.vercel.app/fetchModel", {
+    const resp = await fetch("http://localhost:3001/fetchModel", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ makeConfirm: selectedMake }),
+      body: JSON.stringify({ makeConfirm: selectedMake, accessToken: token }),
     });
     const data = await resp.json();
     if (data.items) {
       const models = data.items.map((item) => item.model);
       console.log("the model inside", models);
       if (models.length == 1) {
-        console.log("what is first",models[0])
-        setSelectedModel(models[0])
+        console.log("what is first", models[0]);
+        setSelectedModel(models[0]);
+        setModels(models);
+      } else {
         setModels(models);
       }
-      else{
-        setModels(models);
-      }
-     
     }
     console.log("models", data);
   };
 
   const retrieveTrim = async () => {
     //send data and GET Trim
-    const resp = await fetch("https://server-valuation.vercel.app/fetchTrim", {
+    const resp = await fetch("http://localhost:3001/fetchTrim", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ modelConfirm: selectedModel }),
+      body: JSON.stringify({ modelConfirm: selectedModel,accessToken:token }),
     });
     const data = await resp.json();
     if (data.items) {
       const trims = data.items.map((item) => item.trim);
       console.log("the trim inside", trims);
       if (trims.length == 1) {
-        console.log("what is first",trims[0])
-        setSelectedTrim(trims[0])
+        console.log("what is first", trims[0]);
+        setSelectedTrim(trims[0]);
         setTrims(trims);
-      }
-      else{
+      } else {
         setTrims(trims);
       }
     }
@@ -263,7 +290,7 @@ function App() {
   };
 
   const getSearchValuation = async () => {
-    const resp = await fetch("https://server-valuation.vercel.app/getSeachValuation", {
+    const resp = await fetch("http://localhost:3001/getSeachValuation", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -274,6 +301,7 @@ function App() {
         gradeConfirm: selectedGrade,
         regionConfirm: selectedRegion,
         odometerConfirm: selectedOdometer,
+        accessToken:token
       }),
     });
     const data = await resp.json();
@@ -290,7 +318,7 @@ function App() {
   };
 
   const getVinValuation = async () => {
-    const resp = await fetch("https://server-valuation.vercel.app/getVinValuation", {
+    const resp = await fetch("http://localhost:3001/getVinValuation", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -300,6 +328,7 @@ function App() {
         colorConfirm: selectedColor,
         odometerConfirm: selectedOdometer,
         gradeConfirm: selectedGrade,
+        accessToken:token
       }),
     });
     const data = await resp.json();
@@ -337,7 +366,7 @@ function App() {
 
   useEffect(() => {
     //GET year useEffect
-    if (token != "no accessToken") {
+    if (token !== "no accessToken") {
       retrieveYears();
       console.log("getYear triggered");
     }
