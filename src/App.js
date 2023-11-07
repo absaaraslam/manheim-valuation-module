@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Navbar, Container, Row, Col } from "react-bootstrap";
 import Logo from "./assets/logo.webp";
 function App() {
-  const base=`https://server-valuation.vercel.app`;
+  const base=`https://optimistic-chebyshev.72-167-140-11.plesk.page`;
   const [token, setToken] = useState("no accessToken");
 
   const [tokenFlag, setTokenFlag] = useState(false);
