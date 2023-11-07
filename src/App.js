@@ -65,6 +65,9 @@ function App() {
       setSearchValuationVis(false);
       setValuationVis(false);
       setSearchWholesale([]);
+      setMakes([]);
+      setModels([]);
+      setTrims([]);
       setSelectedColor("");
       setSelectedGrade("");
       setSelectedMake("");
@@ -87,6 +90,36 @@ function App() {
     }
   };
 
+  const dataClearing = (flag) => {
+    switch (flag) {
+      case "year":
+        setSearchWholesale([]);
+        setSelectedMake("");
+        setSelectedModel("");
+        setSelectedTrim("");
+        setMakes([]);
+        setModels([]);
+        setTrims([]);
+        break;
+      case "make":
+        setSearchWholesale([]);
+        setSelectedModel("");
+        setSelectedTrim("");
+        setModels([]);
+        setTrims([]);
+        break;
+      case "model":
+        setSearchWholesale([]);
+        setSelectedTrim("");
+        setTrims([]);
+        break;
+      case "trim":
+        setSearchWholesale([]);
+        break;
+      default:
+        break;
+    }
+  };
   //button handlers
   const valuationButtonHandler = () => {
     setValuationFlag(true);
@@ -102,22 +135,26 @@ function App() {
   const handleYearChange = (event) => {
     console.log("here is selected year=>", event.target.value);
     setSelectedYear(event.target.value);
+    dataClearing('year');
   };
 
   const handleMakeChange = (event) => {
     console.log("here is selected make=>", event.target.value);
     setSelectedMake(event.target.value);
+    dataClearing('make');
   };
 
   const handleModelChange = (event) => {
     console.log("here is selected model=>", event.target.value);
     setSelectedModel(event.target.value);
+    dataClearing('model');
   };
 
   const handleTrimChange = (event) => {
     console.log("here is selected trim=>", event.target.value);
     setSelectedTrim(event.target.value);
     setValuationVis(true);
+    dataClearing('trim');
   };
 
   const handleColorChange = (event) => {
@@ -248,7 +285,11 @@ function App() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ makeConfirm: selectedMake, accessToken: token }),
+      body: JSON.stringify({
+        yearConfirm: selectedYear,
+        makeConfirm: selectedMake,
+        accessToken: token,
+      }),
     });
     const data = await resp.json();
     if (data.items) {
@@ -272,7 +313,12 @@ function App() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ modelConfirm: selectedModel,accessToken:token }),
+      body: JSON.stringify({
+        yearConfirm: selectedYear,
+        makeConfirm: selectedMake,
+        modelConfirm: selectedModel,
+        accessToken: token,
+      }),
     });
     const data = await resp.json();
     if (data.items) {
@@ -296,12 +342,15 @@ function App() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        yearConfirm: selectedYear,
+        makeConfirm: selectedMake,
+        modelConfirm: selectedModel,
         trimConfirm: selectedTrim,
         colorConfirm: selectedColor,
         gradeConfirm: selectedGrade,
         regionConfirm: selectedRegion,
         odometerConfirm: selectedOdometer,
-        accessToken:token
+        accessToken: token,
       }),
     });
     const data = await resp.json();
@@ -328,7 +377,7 @@ function App() {
         colorConfirm: selectedColor,
         odometerConfirm: selectedOdometer,
         gradeConfirm: selectedGrade,
-        accessToken:token
+        accessToken: token,
       }),
     });
     const data = await resp.json();
@@ -414,7 +463,13 @@ function App() {
 
   useEffect(() => {
     //search valuation search
-    if (valuationFlag) {
+    if (
+      valuationFlag &&
+      selectedYear !== "" &&
+      selectedMake !== "" &&
+      selectedModel !== "" &&
+      selectedTrim !== ""
+    ) {
       getSearchValuation();
       setValuationFlag(false);
     }
@@ -663,7 +718,7 @@ function App() {
                               className="form-control"
                               id="trim"
                               onChange={handleTrimChange}
-                              value={"Trims"}
+                              value={selectedTrim}
                             >
                               {DBTrims.map((trim) => (
                                 <option key={trim} value={trim}>
