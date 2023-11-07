@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Navbar, Container, Row, Col } from "react-bootstrap";
 import Logo from "./assets/logo.webp";
 function App() {
+  const base=`https://server-valuation.vercel.app`;
   const [token, setToken] = useState("no accessToken");
 
   const [tokenFlag, setTokenFlag] = useState(false);
@@ -180,7 +181,7 @@ function App() {
 
   const tokenGen = async () => {
     //POST AccessToken
-    const res = await fetch("https://server-valuation.vercel.app/api/token", {
+    const res = await fetch(`${base}/api/token`, {
       method: "POST",
     })
       .then((response) => response.json())
@@ -196,7 +197,7 @@ function App() {
 
   const retrieveColors = async () => {
     //GET Colors
-    const resp = await fetch("https://server-valuation.vercel.app/fetchColors", {
+    const resp = await fetch(`${base}/fetchColors`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -211,7 +212,7 @@ function App() {
 
   const retrieveGrades = async () => {
     //GET Grades
-    const resp = await fetch("https://server-valuation.vercel.app/fetchGrades", {
+    const resp = await fetch(`${base}/fetchGrades`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -226,7 +227,7 @@ function App() {
 
   const retrieveRegions = async () => {
     //GET Regions
-    const resp = await fetch("https://server-valuation.vercel.app/fetchRegions", {
+    const resp = await fetch(`${base}/fetchRegions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -241,7 +242,7 @@ function App() {
 
   const retrieveYears = async () => {
     //GET Years
-    const resp = await fetch("https://server-valuation.vercel.app/fetchYears", {
+    const resp = await fetch(`${base}/fetchYears`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -256,7 +257,7 @@ function App() {
 
   const retrieveMake = async () => {
     //send Year and GET make
-    const resp = await fetch("https://server-valuation.vercel.app/fetchMake", {
+    const resp = await fetch(`${base}/fetchMake`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -280,7 +281,7 @@ function App() {
 
   const retrieveModel = async () => {
     //send data and GET Model
-    const resp = await fetch("https://server-valuation.vercel.app/fetchModel", {
+    const resp = await fetch(`${base}/fetchModel`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -308,7 +309,7 @@ function App() {
 
   const retrieveTrim = async () => {
     //send data and GET Trim
-    const resp = await fetch("https://server-valuation.vercel.app/fetchTrim", {
+    const resp = await fetch(`${base}/fetchTrim`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -336,7 +337,7 @@ function App() {
   };
 
   const getSearchValuation = async () => {
-    const resp = await fetch("https://server-valuation.vercel.app/getSeachValuation", {
+    const resp = await fetch(`${base}/getSeachValuation`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -367,7 +368,7 @@ function App() {
   };
 
   const getVinValuation = async () => {
-    const resp = await fetch("https://server-valuation.vercel.app/getVinValuation", {
+    const resp = await fetch(`${base}/getVinValuation`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
